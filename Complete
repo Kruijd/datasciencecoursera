@@ -1,0 +1,30 @@
+complete <-function(directory,id=1:332)
+{
+    res<-matrix(ncol=2,nrow=0)
+    res2<-matrix(ncol=2,nrow=0)
+    colnames(res)<-c('ID','NOBS')
+    colnames(res2)<-c('ID','NOBS')
+    for (filecountr in id)
+      #add leading zeroes to file name depending on number of the file
+    {   {  if (filecountr < 10)  prefix <-"00" 
+        else if (filecountr < 100) prefix <-"0" 
+        else prefix<-"" 
+        }
+    
+     filename<-paste(directory,prefix,filecountr,".csv", sep="")
+     filemeasure<-read.csv(file=filename,header=TRUE,sep=",")
+     filled<-filemeasure[(!is.na(filemeasure[,'nitrate'])&!is.na(filemeasure[,'sulfate'])),1]
+     nobs<-length(filled)
+     row<-c(filecountr,nobs)
+     dim(row)<-c(1,2)
+     res2<-rbind(res,row)
+     res<-res2
+    }
+     print(res2)
+}
+  
+# for testing
+dir<-paste(getwd(),"/specdata/",sep="")
+
+station<-30:25
+testje <-complete(dir,station)
